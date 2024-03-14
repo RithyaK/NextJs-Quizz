@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import styles from "../styles/Login.module.css";
 import { useRouter } from "next/router";
+import { createUser, getUser } from "@/firebase/user";
 const Login = () => {
   //
   const router = useRouter();
   const [username, setUsername] = useState("");
   //
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`menu/${username}`);
+
+    const existingUser = await getUser(username);
+
+    if (!existingUser) {
+      createUser(username);
+    }
   }
   //
   return (
